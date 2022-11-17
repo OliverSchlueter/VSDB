@@ -1,3 +1,3 @@
 CLS
 go test .
-go build -o bin/vscb-server.exe .
+go build -o bin/vsdb-server.exe .

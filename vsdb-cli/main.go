@@ -16,6 +16,26 @@ type jsonResponse struct {
 	Result string
 }
 
+func getResponse(url string) (jsonResponse, error) {
+	resp, err := http.Get(url)
+
+	if err != nil {
+		fmt.Println("Server error")
+		fmt.Println(err)
+		return jsonResponse{}, err
+	}
+
+	defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+
+	respObj := jsonResponse{}
+
+	_ = json.Unmarshal(body, &respObj)
+
+	return respObj, nil
+}
+
 func main() {
 	fmt.Println("+--------------------+")
 	fmt.Println("+ Very Slow Database +")
@@ -39,6 +59,8 @@ func main() {
 		}
 	}
 
+	fmt.Println("Using port " + strconv.FormatInt(port, 10))
+
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
@@ -61,21 +83,13 @@ func main() {
 
 			key := args[1]
 
-			resp, err := http.Get("http://localhost:" + strconv.FormatInt(port, 10) + "/get?key=" + key)
+			respObj, err := getResponse("http://localhost:" + strconv.FormatInt(port, 10) + "/get?key=" + key)
 
 			if err != nil {
-				fmt.Println("Server error")
+				fmt.Println("Error")
 				fmt.Println(err)
 				continue
 			}
-
-			defer resp.Body.Close()
-
-			body, _ := io.ReadAll(resp.Body)
-
-			respObj := jsonResponse{}
-
-			_ = json.Unmarshal(body, &respObj)
 
 			if respObj.Status == "not found" {
 				fmt.Println("Entry not found")
@@ -86,7 +100,27 @@ func main() {
 				fmt.Println(respObj.Result)
 				continue
 			}
+		} else if strings.Compare(args[0], "insert") == 0 {
+			if len(args) < 3 {
+				fmt.Println("Syntax: insert <key> <value>")
+				continue
+			}
 
+			key := args[1]
+			value := args[2]
+
+			respObj, err := getResponse("http://localhost:" + strconv.FormatInt(port, 10) + "/insert?key=" + key + "&value=" + value)
+
+			if err != nil {
+				fmt.Println("Error")
+				fmt.Println(err)
+				continue
+			}
+
+			if respObj.Status == "inserted" && respObj.Result == key {
+				fmt.Println("Inserted (" + key + " : " + value + ")")
+				continue
+			}
 		}
 
 	}

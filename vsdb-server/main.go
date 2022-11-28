@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
+	"strconv"
 	"vsdb-server/cache"
 )
 
@@ -76,11 +79,33 @@ func apiDelete(context *gin.Context) {
 var dataCache = cache.CreateCache()
 
 func main() {
+
+	var port int64 = 80
+
+	args := os.Args[1:]
+
+	for i, arg := range args {
+		if arg == "-p" {
+			portArg, err := strconv.ParseInt(args[i+1], 0, 64)
+
+			if err == nil {
+				port = portArg
+			} else {
+				fmt.Println("Invalid port")
+				return
+			}
+		}
+	}
+
 	dataCache.InsertOrUpdate("hello", "world")
 
 	router := gin.Default()
 	router.GET("/get", apiGet)
 	router.GET("/insert", apiInsert)
 	router.GET("/delete", apiDelete)
-	router.Run("localhost:80")
+	err := router.Run("localhost:" + strconv.FormatInt(port, 10))
+
+	if err != nil {
+		return
+	}
 }

@@ -17,3 +17,21 @@ Displays the value of the key
 Syntax: ``insert <key> <value>``
 
 Inserts a new entry in the database
+
+### delete
+
+Syntax: ``delete <key>``
+
+Deletes the entry matching with the key
+
+### getAllKeys
+
+Syntax: ``getAllKeys``
+
+Displays all saved keys
+
+### getAllEntries
+
+Syntax: ``getAllEntries``
+
+Displays all saved entries

@@ -101,6 +101,35 @@ func main() {
 				fmt.Println(respObj.Result)
 				continue
 			}
+
+		case "getallkeys":
+			respObj, err := getResponse("http://localhost:" + strconv.FormatInt(port, 10) + "/getAllKeys")
+
+			if err != nil {
+				fmt.Println("Error")
+				fmt.Println(err)
+				continue
+			}
+
+			res := strings.Replace(respObj.Result, ";", ", ", -1)
+
+			fmt.Println(res)
+
+		case "getallentries":
+			respObj, err := getResponse("http://localhost:" + strconv.FormatInt(port, 10) + "/getAllEntries")
+
+			if err != nil {
+				fmt.Println("Error")
+				fmt.Println(err)
+				continue
+			}
+
+			res := strings.Split(respObj.Result, ";")
+
+			for _, entry := range res {
+				fmt.Println(entry)
+			}
+
 		case "insert":
 			if len(args) < 3 {
 				fmt.Println("Syntax: insert <key> <value>")
@@ -122,6 +151,7 @@ func main() {
 				fmt.Println("Inserted (" + key + " : " + value + ")")
 				continue
 			}
+
 		case "delete":
 			if len(args) < 2 {
 				fmt.Println("Syntax: get <key>")

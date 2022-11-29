@@ -6,6 +6,24 @@
 
 ## Commands
 
+### help
+
+Syntax: ``help``
+
+Displays information about all features
+
+### clearScreen
+
+Syntax: ``clearScreen`` or ``cls``
+
+Clears the console
+
+### exit
+
+Syntax: ``exit`` or ``stop``
+
+Stops the vsdb-cli program
+
 ### get
 
 Syntax: ``get <key>``

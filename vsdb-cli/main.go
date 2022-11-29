@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"os/exec"
 	"strconv"
 	"strings"
 )
@@ -36,11 +37,15 @@ func getResponse(url string) (jsonResponse, error) {
 	return respObj, nil
 }
 
-func main() {
+func printTitle() {
 	fmt.Println("+--------------------+")
 	fmt.Println("+ Very Slow Database +")
 	fmt.Println("+--------------------+")
 	fmt.Println("")
+}
+
+func main() {
+	printTitle()
 
 	var port int64 = 80
 
@@ -76,6 +81,19 @@ func main() {
 		}
 
 		switch strings.ToLower(args[0]) {
+		case "help":
+			fmt.Println("All commands are documented here: https://github.com/OliverSchlueter/VSDB/blob/main/vsdb-cli/README.md#commands")
+
+		case "cls", "clearscreen":
+			cmd := exec.Command("cmd", "/c", "cls")
+			cmd.Stdout = os.Stdout
+			cmd.Run()
+
+			printTitle()
+
+		case "exit", "stop":
+			os.Exit(0)
+
 		case "get":
 			if len(args) < 2 {
 				fmt.Println("Syntax: get <key>")

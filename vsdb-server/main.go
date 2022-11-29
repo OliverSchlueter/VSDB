@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"vsdb-server/cache"
 )
 
@@ -35,6 +36,36 @@ func apiGet(context *gin.Context) {
 	}
 
 	context.IndentedJSON(http.StatusFound, response)
+}
+
+func apiGetAllKeys(context *gin.Context) {
+	keys := dataCache.GetAllKeys()
+	keysStr := ""
+	for _, key := range keys {
+		keysStr += string(key) + ";"
+	}
+
+	keysStr = strings.TrimSuffix(keysStr, ";")
+
+	context.IndentedJSON(http.StatusNotFound, jsonResponse{
+		Status: "success",
+		Result: keysStr,
+	})
+}
+
+func apiGetAllEntries(context *gin.Context) {
+	entries := dataCache.GetAllEntries()
+	entriesStr := ""
+	for key, value := range entries {
+		entriesStr += string(key) + ":" + string(value) + ";"
+	}
+
+	entriesStr = strings.TrimSuffix(entriesStr, ";")
+
+	context.IndentedJSON(http.StatusNotFound, jsonResponse{
+		Status: "success",
+		Result: entriesStr,
+	})
 }
 
 func apiInsert(context *gin.Context) {
@@ -98,9 +129,12 @@ func main() {
 	}
 
 	dataCache.InsertOrUpdate("hello", "world")
+	dataCache.InsertOrUpdate("hello2", "world")
 
 	router := gin.Default()
 	router.GET("/get", apiGet)
+	router.GET("/getAllKeys", apiGetAllKeys)
+	router.GET("/getAllEntries", apiGetAllEntries)
 	router.GET("/insert", apiInsert)
 	router.GET("/delete", apiDelete)
 	err := router.Run("localhost:" + strconv.FormatInt(port, 10))

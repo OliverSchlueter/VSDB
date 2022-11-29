@@ -78,3 +78,22 @@ func (receiver Cache) Get(key string) string {
 
 	return ""
 }
+
+func (receiver Cache) GetAllEntries() map[string]string {
+	newMap := make(map[string]string)
+
+	for k, v := range receiver.data {
+		newMap[k] = v
+	}
+	return newMap
+}
+
+func (receiver Cache) GetAllKeys() []string {
+	var keys []string
+
+	for k, _ := range receiver.data {
+		keys = append(keys, k)
+	}
+
+	return keys
+}

@@ -75,7 +75,8 @@ func main() {
 			continue
 		}
 
-		if strings.Compare(args[0], "get") == 0 {
+		switch strings.ToLower(args[0]) {
+		case "get":
 			if len(args) < 2 {
 				fmt.Println("Syntax: get <key>")
 				continue
@@ -100,7 +101,7 @@ func main() {
 				fmt.Println(respObj.Result)
 				continue
 			}
-		} else if strings.Compare(args[0], "insert") == 0 {
+		case "insert":
 			if len(args) < 3 {
 				fmt.Println("Syntax: insert <key> <value>")
 				continue
@@ -119,6 +120,31 @@ func main() {
 
 			if respObj.Status == "inserted" && respObj.Result == key {
 				fmt.Println("Inserted (" + key + " : " + value + ")")
+				continue
+			}
+		case "delete":
+			if len(args) < 2 {
+				fmt.Println("Syntax: get <key>")
+				continue
+			}
+
+			key := args[1]
+
+			respObj, err := getResponse("http://localhost:" + strconv.FormatInt(port, 10) + "/delete?key=" + key)
+
+			if err != nil {
+				fmt.Println("Error")
+				fmt.Println(err)
+				continue
+			}
+
+			if respObj.Status == "not found" {
+				fmt.Println("Entry not found")
+				continue
+			}
+
+			if respObj.Status == "deleted" && respObj.Result == key {
+				fmt.Println("Deleted " + key)
 				continue
 			}
 		}

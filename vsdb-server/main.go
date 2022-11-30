@@ -47,7 +47,7 @@ func apiGetAllKeys(context *gin.Context) {
 
 	keysStr = strings.TrimSuffix(keysStr, ";")
 
-	context.IndentedJSON(http.StatusNotFound, jsonResponse{
+	context.IndentedJSON(http.StatusOK, jsonResponse{
 		Status: "success",
 		Result: keysStr,
 	})
@@ -62,7 +62,7 @@ func apiGetAllEntries(context *gin.Context) {
 
 	entriesStr = strings.TrimSuffix(entriesStr, ";")
 
-	context.IndentedJSON(http.StatusNotFound, jsonResponse{
+	context.IndentedJSON(http.StatusOK, jsonResponse{
 		Status: "success",
 		Result: entriesStr,
 	})

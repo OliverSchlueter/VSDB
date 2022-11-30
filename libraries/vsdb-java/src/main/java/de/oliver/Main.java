@@ -9,7 +9,5 @@ public class Main {
     public static void main(String[] args) throws IOException, URISyntaxException {
 
         Database database = new Database("localhost", 80);
-
-
     }
 }

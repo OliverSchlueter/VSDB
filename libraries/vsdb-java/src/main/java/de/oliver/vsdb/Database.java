@@ -18,6 +18,9 @@ public class Database {
         this.connectionString = "http://" + host + ":" + port;
     }
 
+    /**
+     * @return the value
+     */
     public String get(String key){
         if(key.length() == 0){
             return "";
@@ -36,6 +39,22 @@ public class Database {
         }
     }
 
+    public int getAsInt(String key){
+        return Integer.parseInt(get(key));
+    }
+
+    public long getAsLong(String key){
+        return Long.parseLong(get(key));
+    }
+
+    public float getAsFloat(String key){
+        return Float.parseFloat(get(key));
+    }
+
+    public double getAsDouble(String key){
+        return Double.parseDouble(get(key));
+    }
+
     public boolean insert(String key, String value){
         if(key.length() == 0 || value.length() == 0){
             return false;
@@ -50,6 +69,25 @@ public class Database {
         }
     }
 
+    public boolean insert(String key, int value){
+        return insert(key, String.valueOf(value));
+    }
+
+    public boolean insert(String key, long value){
+        return insert(key, String.valueOf(value));
+    }
+
+    public boolean insert(String key, float value){
+        return insert(key, String.valueOf(value));
+    }
+
+    public boolean insert(String key, double value){
+        return insert(key, String.valueOf(value));
+    }
+
+    /**
+     * @return true if deleted, false if not
+     */
     public boolean delete(String key){
         if(key.length() == 0){
             return false;

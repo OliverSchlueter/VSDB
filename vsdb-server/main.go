@@ -95,16 +95,19 @@ func apiDelete(context *gin.Context) {
 	context.IndentedJSON(http.StatusOK, response)
 }
 
-var dataCache = cache.CreateCache()
+var dataCache cache.Cache
 
 func main() {
 
 	var port int64 = 80
+	path := "vsdb-data.json"
+	savePersistent := false
 
 	args := os.Args[1:]
 
 	for i, arg := range args {
-		if arg == "-p" {
+		switch arg {
+		case "-port":
 			portArg, err := strconv.ParseInt(args[i+1], 0, 64)
 
 			if err == nil {
@@ -113,11 +116,24 @@ func main() {
 				fmt.Println("Invalid port")
 				return
 			}
+
+		case "-savePersistent":
+			savePersistent = true
+
+		case "-path":
+			pathArg := args[i+1]
+
+			if pathArg != "" {
+				path = pathArg
+			} else {
+				fmt.Println("Invalid path")
+				return
+			}
+
 		}
 	}
 
-	dataCache.InsertOrUpdate("hello", "world")
-	dataCache.InsertOrUpdate("hello2", "world")
+	dataCache = cache.CreateCache(savePersistent, path)
 
 	router := gin.Default()
 	router.GET("/get", apiGet)

@@ -1,18 +1,30 @@
 package cache
 
 import (
+	"encoding/json"
+	"fmt"
+	"os"
 	"time"
 )
 
 type Cache struct {
-	data   map[string]string
-	expire map[string]int64
+	savePersistent bool
+	savePath       string
+	data           map[string]string
+	expire         map[string]int64
 }
 
-func CreateCache() Cache {
+func CreateCache(savePersistent bool, savePath string) Cache {
 	c := Cache{
-		data:   map[string]string{},
-		expire: map[string]int64{},
+		savePersistent: savePersistent,
+		savePath:       savePath,
+		data:           map[string]string{},
+		expire:         map[string]int64{},
+	}
+
+	if savePersistent {
+		c.loadDataFromPath()
+		go c.startSaveRoutine()
 	}
 
 	go c.startCacheRoutine()
@@ -25,6 +37,43 @@ func (receiver Cache) startCacheRoutine() {
 		receiver.checkForExpire()
 		time.Sleep(1000 * time.Millisecond)
 	}
+}
+
+func (receiver Cache) startSaveRoutine() {
+	for true {
+		receiver.Save()
+		time.Sleep(10 * time.Second)
+	}
+}
+
+func (receiver Cache) Save() {
+	fmt.Println("Saving data to " + receiver.savePath)
+
+	data, _ := json.Marshal(receiver.data)
+
+	file, err := os.Create(receiver.savePath)
+	if err != nil {
+		return
+	}
+
+	defer file.Close()
+
+	file.Write(data)
+}
+
+func (receiver Cache) loadDataFromPath() {
+	_, err := os.OpenFile(receiver.savePath, os.O_RDONLY, os.ModeTemporary)
+
+	if os.IsNotExist(err) {
+		return
+	}
+
+	d, err := os.ReadFile(receiver.savePath)
+	if err != nil {
+		return
+	}
+
+	json.Unmarshal(d, &receiver.data)
 }
 
 func (receiver Cache) checkForExpire() {

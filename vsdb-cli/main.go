@@ -14,7 +14,7 @@ import (
 
 type jsonResponse struct {
 	Status string
-	Result string
+	Result map[string]string
 }
 
 func getResponse(url string) (jsonResponse, error) {
@@ -116,7 +116,7 @@ func main() {
 			}
 
 			if respObj.Status == "found" {
-				fmt.Println(respObj.Result)
+				fmt.Println(respObj.Result[key])
 				continue
 			}
 
@@ -129,9 +129,9 @@ func main() {
 				continue
 			}
 
-			res := strings.Replace(respObj.Result, ";", ", ", -1)
-
-			fmt.Println(res)
+			for k, _ := range respObj.Result {
+				fmt.Println(k)
+			}
 
 		case "getallentries":
 			respObj, err := getResponse("http://localhost:" + strconv.FormatInt(port, 10) + "/getAllEntries")
@@ -142,10 +142,8 @@ func main() {
 				continue
 			}
 
-			res := strings.Split(respObj.Result, ";")
-
-			for _, entry := range res {
-				fmt.Println(entry)
+			for k, v := range respObj.Result {
+				fmt.Println(k + " : " + v)
 			}
 
 		case "insert":
@@ -165,7 +163,7 @@ func main() {
 				continue
 			}
 
-			if respObj.Status == "inserted" && respObj.Result == key {
+			if respObj.Status == "inserted" && respObj.Result[key] == value {
 				fmt.Println("Inserted (" + key + " : " + value + ")")
 				continue
 			}
@@ -191,7 +189,7 @@ func main() {
 				continue
 			}
 
-			if respObj.Status == "deleted" && respObj.Result == key {
+			if respObj.Status == "deleted" {
 				fmt.Println("Deleted " + key)
 				continue
 			}

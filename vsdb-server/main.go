@@ -6,13 +6,12 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"strings"
 	"vsdb-server/cache"
 )
 
 type jsonResponse struct {
 	Status string
-	Result string
+	Result map[string]string
 }
 
 func apiGet(context *gin.Context) {
@@ -23,7 +22,6 @@ func apiGet(context *gin.Context) {
 	if !contains {
 		response := jsonResponse{
 			Status: "not found",
-			Result: dataCache.Get(key),
 		}
 
 		context.IndentedJSON(http.StatusNotFound, response)
@@ -32,7 +30,7 @@ func apiGet(context *gin.Context) {
 
 	response := jsonResponse{
 		Status: "found",
-		Result: dataCache.Get(key),
+		Result: map[string]string{key: dataCache.Get(key)},
 	}
 
 	context.IndentedJSON(http.StatusFound, response)
@@ -40,31 +38,22 @@ func apiGet(context *gin.Context) {
 
 func apiGetAllKeys(context *gin.Context) {
 	keys := dataCache.GetAllKeys()
-	keysStr := ""
-	for _, key := range keys {
-		keysStr += string(key) + ";"
-	}
+	keyMap := make(map[string]string)
 
-	keysStr = strings.TrimSuffix(keysStr, ";")
+	for _, key := range keys {
+		keyMap[key] = ""
+	}
 
 	context.IndentedJSON(http.StatusOK, jsonResponse{
 		Status: "success",
-		Result: keysStr,
+		Result: keyMap,
 	})
 }
 
 func apiGetAllEntries(context *gin.Context) {
-	entries := dataCache.GetAllEntries()
-	entriesStr := ""
-	for key, value := range entries {
-		entriesStr += string(key) + ":" + string(value) + ";"
-	}
-
-	entriesStr = strings.TrimSuffix(entriesStr, ";")
-
 	context.IndentedJSON(http.StatusOK, jsonResponse{
 		Status: "success",
-		Result: entriesStr,
+		Result: dataCache.GetAllEntries(),
 	})
 }
 
@@ -76,7 +65,7 @@ func apiInsert(context *gin.Context) {
 
 	response := jsonResponse{
 		Status: "inserted",
-		Result: key,
+		Result: map[string]string{key: value},
 	}
 
 	context.IndentedJSON(http.StatusCreated, response)
@@ -90,7 +79,6 @@ func apiDelete(context *gin.Context) {
 	if !contains {
 		response := jsonResponse{
 			Status: "not found",
-			Result: dataCache.Get(key),
 		}
 
 		context.IndentedJSON(http.StatusNotFound, response)
@@ -101,7 +89,7 @@ func apiDelete(context *gin.Context) {
 
 	response := jsonResponse{
 		Status: "deleted",
-		Result: key,
+		Result: map[string]string{key: ""},
 	}
 
 	context.IndentedJSON(http.StatusOK, response)

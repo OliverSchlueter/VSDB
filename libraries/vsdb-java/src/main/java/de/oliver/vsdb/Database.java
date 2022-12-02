@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Database {
 
@@ -30,7 +31,7 @@ public class Database {
             String rawResponse = HttpHelper.httpRequest(connectionString + "/get?key=" + key);
             VSDBResponse response = HttpHelper.gson.fromJson(rawResponse, VSDBResponse.class);
             if(response.Status.equals("found")){
-                return response.Result;
+                return response.Result.get(key);
             } else {
                 return "";
             }
@@ -102,11 +103,11 @@ public class Database {
         }
     }
 
-    public String[] getAllKeys(){
+    public Set<String> getAllKeys(){
         try {
             String rawResponse = HttpHelper.httpRequest(connectionString + "/getAllKeys");
             VSDBResponse response = HttpHelper.gson.fromJson(rawResponse, VSDBResponse.class);
-            return response.Result.split(";");
+            return response.Result.keySet();
 
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
@@ -117,14 +118,8 @@ public class Database {
         try {
             String rawResponse = HttpHelper.httpRequest(connectionString + "/getAllEntries");
             VSDBResponse response = HttpHelper.gson.fromJson(rawResponse, VSDBResponse.class);
-            Map<String, String> entries = new HashMap<>();
-            String[] rawEntries = response.Result.split(";");
-            for (String rawEntry : rawEntries) {
-                String[] entry = rawEntry.split(":");
-                entries.put(entry[0], entry[1]);
-            }
 
-            return entries;
+            return response.Result;
 
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);

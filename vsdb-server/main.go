@@ -100,7 +100,7 @@ var dataCache cache.Cache
 func main() {
 
 	var port int64 = 80
-	path := "vsdb-data.json"
+	path := ""
 	savePersistent := false
 
 	args := os.Args[1:]

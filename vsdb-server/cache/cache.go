@@ -47,11 +47,13 @@ func (receiver Cache) startSaveRoutine() {
 }
 
 func (receiver Cache) Save() {
-	fmt.Println("Saving data to " + receiver.savePath)
+	path := receiver.savePath + "data.json"
+
+	fmt.Println("Saving data to " + path)
 
 	data, _ := json.Marshal(receiver.data)
 
-	file, err := os.Create(receiver.savePath)
+	file, err := os.Create(path)
 	if err != nil {
 		return
 	}

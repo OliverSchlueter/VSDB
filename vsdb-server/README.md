@@ -2,7 +2,35 @@
 
 ## How to build and run
 1. Run build.bat
-2. Execute bin/vsdb-server.exe
+2. Execute ``bin/vsdb-server.exe``
+
+## Command-line arguments
+
+### -port
+
+Runs the server on a certain port
+
+Syntax: ``$ vsdb-server.exe -port [port number]``
+
+Example: ``$ vsdb-server.exe -port 1337``
+
+### -savePersistent
+
+Enable to save the data persistent in filesystem
+
+Syntax: ``$ vsdb-server.exe -savePersistent``
+
+### -path
+
+Sets the path where to save data if "savePersistent" is enabled
+
+Syntax: ``$ vsdb-server.exe -path [path to a dictionary]``
+
+Example: 
+
+``$ vsdb-server.exe -port "vsdb_data/"``
+
+The data file will be ``vsdb-data/data.json``
 
 ## Endpoints
 
@@ -16,14 +44,16 @@
 
 ``Status``: 'found' if the entry was found, 'not found' if the entry was not found
 
-``Result``: the value of the entry if found, empty if not found
+``Result``: the whole entry if found, empty if not found
 
 Example: ``http://localhost/get?key=hello``
 
 ```json
 {
   "Status": "found",
-  "Result": "world"
+  "Result": {
+    "hello": "world"
+  }
 }
 ```
 
@@ -39,14 +69,16 @@ Example: ``http://localhost/get?key=hello``
 
 ``Status``: 'inserted' if successfully inserted
 
-``Result``: the key of the inserted entry
+``Result``: the inserted entry
 
 Example: ``http://localhost/insert?key=user1&value=oliver``
 
 ```json
 {
   "Status": "inserted",
-  "Result": "user1"
+  "Result": {
+    "user1": "oliver"
+  }
 }
 ```
 
@@ -60,14 +92,16 @@ Example: ``http://localhost/insert?key=user1&value=oliver``
 
 ``Status``: 'not found' if the entry was not found, 'deleted' if the entry was deleted
 
-``Result``: the key of the inserted entry
+``Result``: the key of the deleted entry
 
 Example: ``http://localhost/delete?key=hello``
 
 ```json
 {
   "Status": "deleted",
-  "Result": "hello"
+  "Result": {
+    "hello": ""
+  }
 }
 ```
 
@@ -77,14 +111,17 @@ Example: ``http://localhost/delete?key=hello``
 
 ``Status``: 'success'
 
-``Result``: all saved keys seperated by a semicolon
+``Result``: all saved keys
 
 Example: ``http://localhost/getAllKeys``
 
 ```json
 {
   "Status": "success",
-  "Result": "hello;hello2;hello3"
+  "Result": {
+    "hello": "",
+    "hello2": ""
+  }
 }
 ```
 
@@ -94,13 +131,16 @@ Example: ``http://localhost/getAllKeys``
 
 ``Status``: 'success'
 
-``Result``: all saved entries seperated by a semicolon, key and value are seperated by a colon.
+``Result``: all saved entries
 
 Example: ``http://localhost/getAllEntries``
 
 ```json
 {
   "Status": "success",
-  "Result": "hello:world;hello2:world2;hello3:world3"
+  "Result": {
+    "hello": "world",
+    "hello2": "world2"
+  }
 }
 ```

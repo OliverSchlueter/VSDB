@@ -21,14 +21,14 @@ There is a simple CLI-Program in the vsdb-cli folder that uses the REST-API inte
 
 TODO
 
-### Java libary
+### Java library
+
+There is a simple java library at ```libraries/vsdb-java/```.
+
+### C# library
 
 TODO
 
-### C# libary
-
-TODO
-
-### PHP libary
+### PHP library
 
 TODO

@@ -30,7 +30,7 @@ Example:
 
 ``$ vsdb-server.exe -savePersistent -path "vsdb_data/"``
 
-The data file will be ``vsdb-data/data.json``
+The data file will be ``vsdb_data/data.json``
 
 ## Endpoints
 

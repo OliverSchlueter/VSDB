@@ -28,7 +28,7 @@ Syntax: ``$ vsdb-server.exe -path [path to a dictionary]``
 
 Example: 
 
-``$ vsdb-server.exe -port "vsdb_data/"``
+``$ vsdb-server.exe -savePersistent -path "vsdb_data/"``
 
 The data file will be ``vsdb-data/data.json``
 

@@ -27,7 +27,7 @@ There is a simple java library at ```libraries/vsdb-java/```.
 
 ### C# library
 
-TODO
+There is a simple php library at ```libraries/vsdb-csharp/```.
 
 ### PHP library
 

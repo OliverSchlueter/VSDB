@@ -23,12 +23,12 @@ TODO
 
 ### Java library
 
-There is a simple java library at ```libraries/vsdb-java/```.
+There is a simple Java library at ```libraries/vsdb-java/```.
 
 ### C# library
 
-There is a simple php library at ```libraries/vsdb-csharp/```.
+There is a simple C# library at ```libraries/vsdb-csharp/```.
 
 ### PHP library
 
-There is a simple php library at ```libraries/vsdb-php/```.
+There is a simple PHP library at ```libraries/vsdb-php/```.

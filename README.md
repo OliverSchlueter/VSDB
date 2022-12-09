@@ -31,4 +31,4 @@ TODO
 
 ### PHP library
 
-TODO
+There is a simple php library at ```libraries/vsdb-php/```.
